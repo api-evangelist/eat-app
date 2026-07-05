@@ -1,0 +1,59 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Eat App
+providerId: eat-app
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Restaurant
+- Reservations
+- Hospitality
+- Rate Limiting
+- Quotas
+description: >-
+  Eat App's public API documentation states that endpoints are rate limited to
+  approximately 60 requests per minute per API key. This applies to both the
+  Partner API and the Concierge API. Requests are authenticated with a Bearer
+  token (the issued API key) and scoped per group / per restaurant via headers,
+  so throttling is effectively per credential. Beyond the request-rate cap,
+  usage is bounded by the per-location plan (cover allowances) rather than by API
+  quotas.
+notes: >-
+  The ~60 requests/minute figure comes from the public Partner/Concierge
+  documentation and Postman reference. Confirm the current limit and the exact
+  throttled-response behavior (headers, Retry-After) against a live API key
+  during reconciliation.
+sources:
+- https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+- https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+- https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+responseCodes:
+  throttled: 429
+limits:
+- name: Partner API Requests
+  scope: apiKey
+  metric: requests
+  limit: ~60 per minute
+  notes: Documented approximate per-key request-rate cap for the Partner API.
+- name: Concierge API Requests
+  scope: apiKey
+  metric: requests
+  limit: ~60 per minute
+  notes: Documented approximate per-key request-rate cap for the Concierge API.
+- name: Monthly Covers
+  scope: location
+  metric: covers
+  limit: per plan
+  notes: Free plan caps monthly covers (100); Starter caps at 300; Essential and Pro are unlimited.
+policies:
+- name: Idempotency
+  description: Concierge reservation creation accepts an idempotency_token so retries do not create duplicate reservations.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+- name: Compression
+  description: The Partner API supports Gzip response encoding via the Accept-Encoding header to reduce payload size.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

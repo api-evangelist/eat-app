@@ -1,0 +1,632 @@
+openapi: 3.0.3
+info:
+  title: Eat App Platform API
+  description: >-
+    Eat App is a restaurant reservation and table management platform. This
+    document models its two documented, partner/key-gated REST surfaces plus a
+    small honestly-modeled table-management surface:
+
+    1. Partner API (base /partners/v2) - for booking channels to read
+    availability and post reservations.
+
+    2. Concierge API (base /concierge/v2) - for restaurants, vendors, and groups
+    to sync reservations, guests, availability, and reference data (resources,
+    groups, restaurants). Requests are scoped with X-Group-ID and X-Restaurant-ID
+    headers and can be created idempotently via an idempotency_token.
+
+    3. Tables and Floor Plans (base /concierge/v2) - MODELED. No public tables or
+    floorplan endpoints are documented; these operations are honestly modeled on
+    Eat App's documented resource conventions and should be confirmed with a
+    partner API key before use.
+
+    All responses follow a JSON:API-style structure (data objects carrying id,
+    type, and attributes). Every request is authenticated with a Bearer token
+    (the API key Eat App issues to a partner or Concierge user). The sandbox host
+    is https://api.eat-sandbox.co and production is https://api.eatapp.co.
+    Endpoints are rate limited to roughly 60 requests per minute.
+  version: '2.0'
+  contact:
+    name: Eat App
+    url: https://eatapp.co
+servers:
+  - url: https://api.eatapp.co
+    description: Production
+  - url: https://api.eat-sandbox.co
+    description: Sandbox
+security:
+  - bearerAuth: []
+tags:
+  - name: Partner - Availability
+    description: Partner API real-time availability lookups.
+  - name: Partner - Reservations
+    description: Partner API reservation creation.
+  - name: Concierge - Reference
+    description: Concierge bootstrap data - resources, groups, restaurants.
+  - name: Concierge - Availability
+    description: Concierge bookable time-slot lookups over a date range.
+  - name: Concierge - Reservations
+    description: Concierge reservation create, list, get, and update/cancel.
+  - name: Concierge - Guests
+    description: Concierge guest search and profile retrieval.
+  - name: Tables and Floor Plans (Modeled)
+    description: >-
+      Honestly-modeled table and floor-plan operations. Not documented in the
+      public Partner or Concierge references; confirm before use.
+paths:
+  /partners/v2/availability:
+    get:
+      operationId: getPartnerAvailability
+      tags:
+        - Partner - Availability
+      summary: Get availability (Partner)
+      description: >-
+        Returns bookable availability for a restaurant on a given date. Confirmed
+        from the public Partner API documentation.
+      parameters:
+        - name: restaurant_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The Eat App restaurant identifier.
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: The date to check availability for (YYYY-MM-DD).
+        - name: guests
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Party size to check availability for.
+      responses:
+        '200':
+          description: A JSON:API document of available time slots.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailabilityResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /partners/v2/reservations:
+    post:
+      operationId: createPartnerReservation
+      tags:
+        - Partner - Reservations
+      summary: Post a reservation (Partner)
+      description: >-
+        Creates a reservation for a restaurant on behalf of a booking channel.
+        Confirmed from the public Partner API documentation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerReservationInput'
+      responses:
+        '201':
+          description: The created reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /concierge/v2/resources:
+    get:
+      operationId: getConciergeResources
+      tags:
+        - Concierge - Reference
+      summary: Get reference data
+      description: >-
+        Loads reference data used for dropdowns and validation (e.g. reservation
+        statuses, sources, tags). Confirmed from the public Concierge docs.
+      responses:
+        '200':
+          description: A JSON:API document of reference resources.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /concierge/v2/groups:
+    get:
+      operationId: listConciergeGroups
+      tags:
+        - Concierge - Reference
+      summary: List accessible groups
+      description: Lists the groups the authenticated Concierge user can access.
+      responses:
+        '200':
+          description: A JSON:API document of groups.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /concierge/v2/restaurants:
+    get:
+      operationId: listConciergeRestaurants
+      tags:
+        - Concierge - Reference
+      summary: List restaurants in a group
+      description: >-
+        Lists restaurants within a group. Requires the X-Group-ID header.
+        Confirmed from the public Concierge docs.
+      parameters:
+        - $ref: '#/components/parameters/GroupIdHeader'
+      responses:
+        '200':
+          description: A JSON:API document of restaurants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /concierge/v2/availability/range:
+    post:
+      operationId: getConciergeAvailabilityRange
+      tags:
+        - Concierge - Availability
+      summary: Query availability over a date range
+      description: >-
+        Returns bookable time slots for a restaurant across a date range.
+        Requires the X-Restaurant-ID header. Confirmed from the public Concierge
+        docs.
+      parameters:
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AvailabilityRangeInput'
+      responses:
+        '200':
+          description: A JSON:API document of available slots.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailabilityResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /concierge/v2/reservations:
+    get:
+      operationId: listConciergeReservations
+      tags:
+        - Concierge - Reservations
+      summary: List reservations
+      description: >-
+        Lists reservations for a restaurant with filtering options. Requires the
+        X-Restaurant-ID header.
+      parameters:
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter reservations by date.
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter reservations by status.
+      responses:
+        '200':
+          description: A JSON:API document of reservations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createConciergeReservation
+      tags:
+        - Concierge - Reservations
+      summary: Create a reservation
+      description: >-
+        Creates a new reservation. Requires the X-Restaurant-ID header and an
+        idempotency_token to safely retry. Confirmed from the public Concierge
+        docs.
+      parameters:
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConciergeReservationInput'
+      responses:
+        '201':
+          description: The created reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /concierge/v2/reservations/{id_or_key}:
+    parameters:
+      - $ref: '#/components/parameters/IdOrKey'
+      - $ref: '#/components/parameters/RestaurantIdHeader'
+    get:
+      operationId: getConciergeReservation
+      tags:
+        - Concierge - Reservations
+      summary: Get a reservation
+      description: Retrieves a single reservation by id or key.
+      responses:
+        '200':
+          description: The requested reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateConciergeReservation
+      tags:
+        - Concierge - Reservations
+      summary: Update or cancel a reservation
+      description: >-
+        Modifies an existing reservation or cancels it (by setting its status).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConciergeReservationInput'
+      responses:
+        '200':
+          description: The updated reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /concierge/v2/guests:
+    get:
+      operationId: searchConciergeGuests
+      tags:
+        - Concierge - Guests
+      summary: Search guests
+      description: >-
+        Searches the guest CRM by query parameter. Requires the X-Restaurant-ID
+        header. Confirmed from the public Concierge docs.
+      parameters:
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Free-text guest search (name, phone, email).
+      responses:
+        '200':
+          description: A JSON:API document of matching guests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /concierge/v2/guests/{guest_id}:
+    get:
+      operationId: getConciergeGuest
+      tags:
+        - Concierge - Guests
+      summary: Get a guest
+      description: Retrieves an individual guest profile by id.
+      parameters:
+        - name: guest_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+      responses:
+        '200':
+          description: The requested guest profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /concierge/v2/tables:
+    get:
+      operationId: listTables
+      tags:
+        - Tables and Floor Plans (Modeled)
+      summary: List tables (MODELED)
+      description: >-
+        MODELED, not documented. Lists the tables configured for a restaurant.
+        Confirm the real path and shape with a partner API key before use.
+      parameters:
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+      responses:
+        '200':
+          description: A JSON:API document of tables.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /concierge/v2/tables/{table_id}:
+    get:
+      operationId: getTable
+      tags:
+        - Tables and Floor Plans (Modeled)
+      summary: Get a table (MODELED)
+      description: MODELED, not documented. Retrieves a single table by id.
+      parameters:
+        - name: table_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+      responses:
+        '200':
+          description: The requested table.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /concierge/v2/floor_plans:
+    get:
+      operationId: listFloorPlans
+      tags:
+        - Tables and Floor Plans (Modeled)
+      summary: List floor plans (MODELED)
+      description: >-
+        MODELED, not documented. Lists the floor plans (dining areas / room
+        layouts) configured for a restaurant. Confirm before use.
+      parameters:
+        - $ref: '#/components/parameters/RestaurantIdHeader'
+      responses:
+        '200':
+          description: A JSON:API document of floor plans.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        Bearer token (the API key Eat App issues to a partner or Concierge user).
+        Sent as Authorization: Bearer <api_token>.
+  parameters:
+    GroupIdHeader:
+      name: X-Group-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific group.
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
+    IdOrKey:
+      name: id_or_key
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The reservation id or reservation key.
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request body failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests (approximately 60 requests per minute).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    ResourceObject:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+    GenericResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/ResourceObject'
+            - type: array
+              items:
+                $ref: '#/components/schemas/ResourceObject'
+    AvailabilityResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                example: availability
+              attributes:
+                type: object
+                properties:
+                  time:
+                    type: string
+                  available:
+                    type: boolean
+                  preference_id:
+                    type: string
+    AvailabilityRangeInput:
+      type: object
+      required:
+        - start_date
+        - end_date
+        - guests
+      properties:
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        guests:
+          type: integer
+    PartnerReservationInput:
+      type: object
+      required:
+        - restaurant_id
+        - date
+        - time
+        - guests
+      properties:
+        restaurant_id:
+          type: string
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+        guests:
+          type: integer
+        preference_id:
+          type: string
+        guest:
+          $ref: '#/components/schemas/GuestInput'
+    ConciergeReservationInput:
+      type: object
+      properties:
+        idempotency_token:
+          type: string
+          description: Required on create to make the request safely retryable.
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+        guests:
+          type: integer
+        status:
+          type: string
+          description: Set to a cancelled status to cancel the reservation.
+        preference_id:
+          type: string
+        guest:
+          $ref: '#/components/schemas/GuestInput'
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+    ReservationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+    ReservationListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    GuestResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+    GuestListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string

@@ -1,0 +1,188 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Eat App
+providerId: eat-app
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Restaurant
+- Reservations
+- Table Management
+- Hospitality
+- Plans
+description: >-
+  Eat App is sold as per-location SaaS. The published plans (Free, Starter,
+  Essential, Pro) are priced per restaurant location per month, with an annual
+  discount (~30% off) versus month-to-month billing. Integrations - including
+  POS, phone, payment, and hotel PMS - are paid add-ons. API access (Partner API
+  and Concierge API) is not a separate self-serve SKU: it is granted on request
+  as part of custom-integration / partner onboarding, so there is no published
+  standalone API price. The numbers below are grounded in the Eat App pricing
+  page as of the review date and may change.
+notes: >-
+  Prices reflect the annual (discounted) figures with month-to-month figures in
+  parentheses inside the entries. Verify current numbers on the Eat App pricing
+  page during reconciliation. API access is quote-based via the integrations /
+  sales team.
+sources:
+- https://restaurant.eatapp.co/pricing
+- https://eatapp.co/integrations
+- https://restaurant.eatapp.co/knowledge/documentation
+plans:
+- id: eat-app-free
+  name: Free
+  type: free
+  description: >-
+    Permanent free plan for a single location - online reservations, chat inbox,
+    and custom forms, with a monthly cover cap.
+  entries:
+  - label: Monthly Covers
+    name: free_covers
+    type: usage
+    metric: covers
+    limit: 100
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '0'
+    userMultiplied: false
+  elements:
+  - name: Online Reservations
+  - name: Chat Inbox
+  - name: Custom Forms
+- id: eat-app-starter
+  name: Starter
+  type: paid
+  description: >-
+    Entry paid plan per location - reservation and table management with
+    WhatsApp guest messaging. Roughly USD 69/mo billed annually (USD 99/mo
+    month-to-month).
+  entries:
+  - label: Per Location
+    name: starter_location
+    type: flat
+    metric: location
+    limit: 1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: 'USD 69/mo annual (USD 99/mo monthly)'
+    userMultiplied: false
+  - label: Monthly Covers
+    name: starter_covers
+    type: usage
+    metric: covers
+    limit: 300
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  elements:
+  - name: Reservation and Table Management
+  - name: WhatsApp Messaging (100 conversations/mo)
+- id: eat-app-essential
+  name: Essential
+  type: paid
+  description: >-
+    Mid tier per location with unlimited monthly covers. Roughly USD 159/mo
+    billed annually (USD 199/mo month-to-month).
+  entries:
+  - label: Per Location
+    name: essential_location
+    type: flat
+    metric: location
+    limit: 1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: 'USD 159/mo annual (USD 199/mo monthly)'
+    userMultiplied: false
+  - label: Monthly Covers
+    name: essential_covers
+    type: usage
+    metric: covers
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: unlimited
+    userMultiplied: false
+  elements:
+  - name: Unlimited Monthly Bookings
+  - name: Reports
+  - name: WhatsApp Messaging (250 conversations/mo)
+- id: eat-app-pro
+  name: Pro
+  type: paid
+  description: >-
+    Top published tier per location - full control with advanced analytics and
+    CRM. Roughly USD 299/mo billed annually (USD 389/mo month-to-month).
+  entries:
+  - label: Per Location
+    name: pro_location
+    type: flat
+    metric: location
+    limit: 1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: 'USD 299/mo annual (USD 389/mo monthly)'
+    userMultiplied: false
+  - label: Monthly Covers
+    name: pro_covers
+    type: usage
+    metric: covers
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: unlimited
+    userMultiplied: false
+  elements:
+  - name: Advanced Analytics
+  - name: Guest CRM
+  - name: WhatsApp Messaging (500 conversations + 500 marketing/mo)
+- id: eat-app-api-access
+  name: API and Custom Integration Access
+  type: enterprise
+  description: >-
+    Partner API and Concierge API access is granted on request as part of
+    custom-integration / partner onboarding rather than sold as a self-serve
+    SKU. Contact Eat App to obtain an API key. No standalone published price.
+  entries:
+  - label: API Access
+    name: api_access
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales / integrations team
+    userMultiplied: false
+  elements:
+  - name: Partner API (Availability and Reservations)
+  - name: Concierge API (Reservations, Guests, Availability, Reference)
+  - name: Webhooks
+  - name: Restaurant MCP
+addOns:
+- name: POS Integration
+  price: 'USD 59/mo per location'
+- name: Phone Integration
+  price: 'USD 25/mo per location'
+- name: Payment Integration
+  price: 'USD 19/mo per location'
+- name: Hotel PMS Integration
+  price: 'USD 80/mo per location'
+- name: Email Marketing Suite
+  price: 'USD 49/mo per location'
+- name: Automation Suite
+  price: 'USD 59/mo per location'
+- name: CRM and Smart Reports
+  price: 'USD 39/mo per location'
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

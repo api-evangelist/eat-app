@@ -1,0 +1,268 @@
+{
+  "info": {
+    "name": "Eat App Platform API",
+    "description": "Eat App restaurant reservation and table management platform. Two documented, partner/key-gated REST surfaces plus a small honestly-modeled table-management surface. Partner API base: {{baseUrl}}/partners/v2. Concierge API base: {{baseUrl}}/concierge/v2. Sandbox host https://api.eat-sandbox.co, production https://api.eatapp.co. All requests use Bearer-token auth (the API key Eat App issues). Responses follow a JSON:API-style structure. Rate limited to ~60 requests/minute.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{apiToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.eat-sandbox.co", "type": "string" },
+    { "key": "apiToken", "value": "", "type": "string" },
+    { "key": "groupId", "value": "", "type": "string" },
+    { "key": "restaurantId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Partner API",
+      "item": [
+        {
+          "name": "Get availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/partners/v2/availability?restaurant_id={{restaurantId}}&date=2026-07-10&guests=2",
+              "host": ["{{baseUrl}}"],
+              "path": ["partners", "v2", "availability"],
+              "query": [
+                { "key": "restaurant_id", "value": "{{restaurantId}}" },
+                { "key": "date", "value": "2026-07-10" },
+                { "key": "guests", "value": "2" }
+              ]
+            },
+            "description": "Returns bookable availability for a restaurant on a given date. Confirmed from public Partner API docs."
+          }
+        },
+        {
+          "name": "Post a reservation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"restaurant_id\": \"{{restaurantId}}\",\n  \"date\": \"2026-07-10\",\n  \"time\": \"19:30\",\n  \"guests\": 2,\n  \"preference_id\": \"\",\n  \"guest\": {\n    \"first_name\": \"Ada\",\n    \"last_name\": \"Lovelace\",\n    \"phone\": \"+15555550100\",\n    \"email\": \"ada@example.com\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/partners/v2/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["partners", "v2", "reservations"]
+            },
+            "description": "Creates a reservation on behalf of a booking channel. Confirmed from public Partner API docs."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concierge - Reference",
+      "item": [
+        {
+          "name": "Get reference data (resources)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/resources",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "resources"]
+            },
+            "description": "Loads reference data for dropdowns and validation."
+          }
+        },
+        {
+          "name": "List accessible groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/groups",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "groups"]
+            },
+            "description": "Lists the groups the authenticated Concierge user can access."
+          }
+        },
+        {
+          "name": "List restaurants in a group",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Group-ID", "value": "{{groupId}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/restaurants",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "restaurants"]
+            },
+            "description": "Lists restaurants within a group. Requires the X-Group-ID header."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concierge - Availability",
+      "item": [
+        {
+          "name": "Query availability over a date range",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_date\": \"2026-07-10\",\n  \"end_date\": \"2026-07-14\",\n  \"guests\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/availability/range",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "availability", "range"]
+            },
+            "description": "Returns bookable time slots across a date range. Requires the X-Restaurant-ID header."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concierge - Reservations",
+      "item": [
+        {
+          "name": "List reservations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/reservations?date=2026-07-10",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "reservations"],
+              "query": [{ "key": "date", "value": "2026-07-10" }]
+            },
+            "description": "Lists reservations for a restaurant with filtering options."
+          }
+        },
+        {
+          "name": "Create a reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_token\": \"9f1c-4e2a\",\n  \"date\": \"2026-07-10\",\n  \"time\": \"20:00\",\n  \"guests\": 4,\n  \"guest\": {\n    \"first_name\": \"Grace\",\n    \"last_name\": \"Hopper\",\n    \"phone\": \"+15555550111\",\n    \"email\": \"grace@example.com\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "reservations"]
+            },
+            "description": "Creates a reservation. Requires X-Restaurant-ID and an idempotency_token."
+          }
+        },
+        {
+          "name": "Get a reservation",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/reservations/:id_or_key",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "reservations", ":id_or_key"],
+              "variable": [{ "key": "id_or_key", "value": "" }]
+            },
+            "description": "Retrieves a single reservation by id or key."
+          }
+        },
+        {
+          "name": "Update or cancel a reservation",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"cancelled\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/reservations/:id_or_key",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "reservations", ":id_or_key"],
+              "variable": [{ "key": "id_or_key", "value": "" }]
+            },
+            "description": "Modifies or cancels an existing reservation."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Concierge - Guests",
+      "item": [
+        {
+          "name": "Search guests",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/guests?query=hopper",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "guests"],
+              "query": [{ "key": "query", "value": "hopper" }]
+            },
+            "description": "Searches the guest CRM by query parameter."
+          }
+        },
+        {
+          "name": "Get a guest",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/guests/:guest_id",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "guests", ":guest_id"],
+              "variable": [{ "key": "guest_id", "value": "" }]
+            },
+            "description": "Retrieves an individual guest profile by id."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tables and Floor Plans (MODELED - unconfirmed)",
+      "item": [
+        {
+          "name": "List tables (MODELED)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/tables",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "tables"]
+            },
+            "description": "MODELED, not documented. Lists tables configured for a restaurant. Confirm before use."
+          }
+        },
+        {
+          "name": "List floor plans (MODELED)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Restaurant-ID", "value": "{{restaurantId}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/concierge/v2/floor_plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["concierge", "v2", "floor_plans"]
+            },
+            "description": "MODELED, not documented. Lists floor plans for a restaurant. Confirm before use."
+          }
+        }
+      ]
+    }
+  ]
+}

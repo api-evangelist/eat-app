@@ -1,0 +1,117 @@
+aid: eat-app
+name: Eat App
+review:
+  question: Does Eat App expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-05'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Eat App's documented developer surface -
+    the Partner API and the Concierge API - is request/response REST over HTTPS
+    with a JSON:API-style response body. The only server-push mechanism Eat App
+    documents is outbound webhooks (HTTP POST callbacks that reuse the same JSON
+    response structure as the API). Webhooks are server-to-endpoint HTTP, not a
+    bidirectional WebSocket transport, so there is no ws:// or wss:// surface on
+    Eat App's own API to model.
+findings:
+  summary: |
+    Eat App does not publish a documented public WebSocket API. Eat App is a
+    restaurant reservation and table management platform. Its developer surface
+    is two partner/key-gated REST APIs: the Partner API
+    (base https://api.eatapp.co/partners/v2, sandbox
+    https://api.eat-sandbox.co/partners/v2) for booking channels to read
+    availability and post reservations, and the Concierge API
+    (base .../concierge/v2) for restaurants, vendors, and groups to sync
+    reservations, guests, availability, and reference data (resources, groups,
+    restaurants). Both use Bearer-token auth (an issued API key), JSON:API-style
+    responses, X-Group-ID / X-Restaurant-ID scoping headers, an idempotency_token
+    on Concierge reservation creation, and an approximate 60 requests/minute rate
+    limit. Real-time delivery back to integrators is via outbound webhooks (HTTP
+    callbacks), not a WebSocket. No realtime, bidirectional, or streaming
+    WebSocket (ws:// or wss://) endpoint is documented on Eat App's own API.
+  accessModel: |
+    Documented but partner/key-gated - not fully self-serve. The Partner and
+    Concierge APIs are publicly documented (Eat App Help Center plus a published
+    Postman collection/documenter), but an API key is issued by Eat App as part
+    of custom-integration / partner onboarding ("reach out to learn how you can
+    gain access to your reservations and guests through our open API"). There is
+    no public developer signup that mints an API key without contact. A sandbox
+    host (api.eat-sandbox.co) mirrors production (api.eatapp.co). Eat App also
+    documents a Restaurant MCP server for connecting AI assistants.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.eatapp.co/partners/v2
+      documented: true
+      note: Partner API - availability and reservations. Sandbox host is https://api.eat-sandbox.co.
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.eatapp.co/concierge/v2
+      documented: true
+      note: Concierge API - reservations, guests, availability, resources, groups, restaurants.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound event notifications reusing the same JSON structure as API responses. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: MCP
+      scheme: https
+      documented: true
+      note: Restaurant MCP server for connecting AI assistants; not a WebSocket surface.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Eat App's Partner or Concierge references as of the review date.
+  endpointsConfirmedRest:
+    - GET    https://api.eatapp.co/partners/v2/availability
+    - POST   https://api.eatapp.co/partners/v2/reservations
+    - GET    https://api.eatapp.co/concierge/v2/resources
+    - GET    https://api.eatapp.co/concierge/v2/groups
+    - GET    https://api.eatapp.co/concierge/v2/restaurants
+    - POST   https://api.eatapp.co/concierge/v2/availability/range
+    - GET    https://api.eatapp.co/concierge/v2/reservations
+    - POST   https://api.eatapp.co/concierge/v2/reservations
+    - GET    https://api.eatapp.co/concierge/v2/reservations/{id_or_key}
+    - PATCH  https://api.eatapp.co/concierge/v2/reservations/{id_or_key}
+    - GET    https://api.eatapp.co/concierge/v2/guests
+    - GET    https://api.eatapp.co/concierge/v2/guests/{guest_id}
+  endpointsModeled:
+    - GET    https://api.eatapp.co/concierge/v2/tables
+    - GET    https://api.eatapp.co/concierge/v2/tables/{table_id}
+    - GET    https://api.eatapp.co/concierge/v2/floor_plans
+  endpointsModeledNote: |
+    Table and floor-plan management is core to the Eat App product, but no
+    public tables or floorplan endpoints are documented in the Partner or
+    Concierge references as of the review date. The three endpoints above are
+    honestly modeled on Eat App's documented resource conventions
+    (JSON:API, /concierge/v2, X-Restaurant-ID scoping) and must be confirmed
+    against a live partner API key before use.
+sources:
+  - url: https://restaurant.eatapp.co/knowledge/documentation
+    type: Documentation
+    note: Help Center documentation hub listing Partner API, Concierge API, and Restaurant MCP.
+  - url: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+    type: APIReference
+    note: Partner API - GET /partners/v2/availability and POST /partners/v2/reservations. JSON:API, Bearer auth, ~60 req/min.
+  - url: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+    type: APIReference
+    note: Concierge API - resources, groups, restaurants, availability/range, reservations CRUD, guests. X-Group-ID / X-Restaurant-ID headers, idempotency_token, webhooks.
+  - url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+    type: PostmanDocumentation
+    note: Published "Eat Partner APIs" Postman documenter for the Partner API.
+  - url: https://eatapp.co/integrations
+    type: Documentation
+    note: Integrations page; FAQ confirms API access is granted on request ("our open API").
+  - url: https://restaurant.eatapp.co/pricing
+    type: Plans
+    note: Per-location plan pricing (Free / Starter / Essential / Pro) and integration add-ons.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists on Eat App's own API. The documented
+    developer surface is request/response REST (Partner API and Concierge API)
+    with outbound webhooks for event delivery and a Restaurant MCP server. No
+    AsyncAPI document was created because there is no server-push WebSocket/SSE
+    transport on Eat App's own API to model; webhooks are ordinary outbound HTTP
+    callbacks.

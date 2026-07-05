@@ -1,0 +1,96 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Eat App
+providerId: eat-app
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Restaurant
+- Reservations
+- Table Management
+- Hospitality
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Eat App spend. Eat App is per-location SaaS billed monthly (or
+  annually at a discount) on a plan tier - Free, Starter, Essential, or Pro -
+  per restaurant location. Cost scales primarily with the number of locations
+  and the plan tier chosen, plus paid integration add-ons (POS, phone, payment,
+  hotel PMS) that are also per location. API access (Partner API, Concierge API)
+  is not separately metered - it is granted as part of a plan / partner
+  onboarding - so there is no per-call API charge to track; the dominant cost
+  driver is location count times plan tier.
+notes: >-
+  Per-location plan prices and add-on fees are grounded in the Eat App pricing
+  page as of the review date and are not otherwise reconciled. There is no
+  published usage-metered API billing; verify with Eat App whether high-volume
+  API/partner use carries any additional contract terms.
+sources:
+- https://restaurant.eatapp.co/pricing
+- https://eatapp.co/integrations
+- https://restaurant.eatapp.co/knowledge/documentation
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Eat App
+serviceCategory: Business Applications
+billingModel:
+  pricingCategory: Subscription
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+  - Adjustment
+focusColumns:
+  ServiceName: Eat App
+  ServiceCategory: Business Applications
+  ProviderName: Eat App
+  PublisherName: Eat App
+  InvoiceIssuerName: Eat App
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription
+meters:
+- name: location_subscription
+  description: Monthly per-location subscription charge for the chosen plan tier.
+  unit: locations
+  aggregation: sum
+  dimensions:
+  - account
+  - location
+  - plan
+- name: integration_addons
+  description: Per-location add-on charges for POS, phone, payment, and hotel PMS integrations.
+  unit: locations
+  aggregation: sum
+  dimensions:
+  - account
+  - location
+  - integration
+- name: covers
+  description: Monthly covers (seated guests); bounded by plan tier rather than billed per cover.
+  unit: covers
+  aggregation: sum
+  dimensions:
+  - account
+  - location
+principles:
+- name: Visibility
+  description: Track subscription and add-on charges per location and plan tier; API access does not add a per-call meter.
+- name: Allocation
+  description: Map each location's plan and add-ons to the owning brand / cost center; multi-location groups aggregate at the group level.
+- name: Optimization
+  description: Right-size plan tiers per location against actual cover volume; drop unused integration add-ons; consolidate under group billing where available.
+- name: Accountability
+  description: Assign an owner per location subscription and review monthly against cover usage and integration needs.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
