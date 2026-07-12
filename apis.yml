@@ -154,6 +154,10 @@ apis:
     conventions and marked as endpointsModeled - they should be confirmed against a
     partner API key before use.
 common:
+- type: DomainSecurity
+  url: security/eat-app-domain-security.yml
+- type: Authentication
+  url: authentication/eat-app-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/eatapp
 - type: LinkedIn

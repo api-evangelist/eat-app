@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/eat-app-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: 'Bearer token (the API key Eat App issues to a partner or Concierge user). Sent
+    as Authorization: Bearer <api_token>.'
+  sources:
+  - openapi/eat-app-openapi.yml
