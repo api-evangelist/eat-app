@@ -154,6 +154,8 @@ apis:
     conventions and marked as endpointsModeled - they should be confirmed against a
     partner API key before use.
 common:
+- type: AgenticAccess
+  url: agentic-access/eat-app-agentic-access.yml
 - type: DomainSecurity
   url: security/eat-app-domain-security.yml
 - type: Authentication
