@@ -1,0 +1,121 @@
+openapi: 3.0.3
+info:
+  title: Eat App Platform Concierge - Availability Partner - Availability API
+  description: 'Eat App is a restaurant reservation and table management platform. This document models its two documented, partner/key-gated REST surfaces plus a small honestly-modeled table-management surface:
+
+    1. Partner API (base /partners/v2) - for booking channels to read availability and post reservations.
+
+    2. Concierge API (base /concierge/v2) - for restaurants, vendors, and groups to sync reservations, guests, availability, and reference data (resources, groups, restaurants). Requests are scoped with X-Group-ID and X-Restaurant-ID headers and can be created idempotently via an idempotency_token.
+
+    3. Tables and Floor Plans (base /concierge/v2) - MODELED. No public tables or floorplan endpoints are documented; these operations are honestly modeled on Eat App''s documented resource conventions and should be confirmed with a partner API key before use.
+
+    All responses follow a JSON:API-style structure (data objects carrying id, type, and attributes). Every request is authenticated with a Bearer token (the API key Eat App issues to a partner or Concierge user). The sandbox host is https://api.eat-sandbox.co and production is https://api.eatapp.co. Endpoints are rate limited to roughly 60 requests per minute.'
+  version: '2.0'
+  contact:
+    name: Eat App
+    url: https://eatapp.co
+servers:
+- url: https://api.eatapp.co
+  description: Production
+- url: https://api.eat-sandbox.co
+  description: Sandbox
+security:
+- bearerAuth: []
+tags:
+- name: Partner - Availability
+  description: Partner API real-time availability lookups.
+paths:
+  /partners/v2/availability:
+    get:
+      operationId: getPartnerAvailability
+      tags:
+      - Partner - Availability
+      summary: Get availability (Partner)
+      description: Returns bookable availability for a restaurant on a given date. Confirmed from the public Partner API documentation.
+      parameters:
+      - name: restaurant_id
+        in: query
+        required: true
+        schema:
+          type: string
+        description: The Eat App restaurant identifier.
+      - name: date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The date to check availability for (YYYY-MM-DD).
+      - name: guests
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Party size to check availability for.
+      responses:
+        '200':
+          description: A JSON:API document of available time slots.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailabilityResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  schemas:
+    AvailabilityResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                example: availability
+              attributes:
+                type: object
+                properties:
+                  time:
+                    type: string
+                  available:
+                    type: boolean
+                  preference_id:
+                    type: string
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests (approximately 60 requests per minute).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token (the API key Eat App issues to a partner or Concierge user). Sent as Authorization: Bearer <api_token>.'

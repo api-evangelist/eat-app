@@ -1,0 +1,140 @@
+openapi: 3.0.3
+info:
+  title: Eat App Platform Concierge - Availability Concierge - Guests API
+  description: 'Eat App is a restaurant reservation and table management platform. This document models its two documented, partner/key-gated REST surfaces plus a small honestly-modeled table-management surface:
+
+    1. Partner API (base /partners/v2) - for booking channels to read availability and post reservations.
+
+    2. Concierge API (base /concierge/v2) - for restaurants, vendors, and groups to sync reservations, guests, availability, and reference data (resources, groups, restaurants). Requests are scoped with X-Group-ID and X-Restaurant-ID headers and can be created idempotently via an idempotency_token.
+
+    3. Tables and Floor Plans (base /concierge/v2) - MODELED. No public tables or floorplan endpoints are documented; these operations are honestly modeled on Eat App''s documented resource conventions and should be confirmed with a partner API key before use.
+
+    All responses follow a JSON:API-style structure (data objects carrying id, type, and attributes). Every request is authenticated with a Bearer token (the API key Eat App issues to a partner or Concierge user). The sandbox host is https://api.eat-sandbox.co and production is https://api.eatapp.co. Endpoints are rate limited to roughly 60 requests per minute.'
+  version: '2.0'
+  contact:
+    name: Eat App
+    url: https://eatapp.co
+servers:
+- url: https://api.eatapp.co
+  description: Production
+- url: https://api.eat-sandbox.co
+  description: Sandbox
+security:
+- bearerAuth: []
+tags:
+- name: Concierge - Guests
+  description: Concierge guest search and profile retrieval.
+paths:
+  /concierge/v2/guests:
+    get:
+      operationId: searchConciergeGuests
+      tags:
+      - Concierge - Guests
+      summary: Search guests
+      description: Searches the guest CRM by query parameter. Requires the X-Restaurant-ID header. Confirmed from the public Concierge docs.
+      parameters:
+      - $ref: '#/components/parameters/RestaurantIdHeader'
+      - name: query
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Free-text guest search (name, phone, email).
+      responses:
+        '200':
+          description: A JSON:API document of matching guests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /concierge/v2/guests/{guest_id}:
+    get:
+      operationId: getConciergeGuest
+      tags:
+      - Concierge - Guests
+      summary: Get a guest
+      description: Retrieves an individual guest profile by id.
+      parameters:
+      - name: guest_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/RestaurantIdHeader'
+      responses:
+        '200':
+          description: The requested guest profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    GuestListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    GuestResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+    ResourceObject:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+  parameters:
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token (the API key Eat App issues to a partner or Concierge user). Sent as Authorization: Bearer <api_token>.'

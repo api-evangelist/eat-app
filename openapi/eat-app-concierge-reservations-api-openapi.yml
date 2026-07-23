@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Eat App Platform Concierge - Availability Concierge - Reservations API
+  description: 'Eat App is a restaurant reservation and table management platform. This document models its two documented, partner/key-gated REST surfaces plus a small honestly-modeled table-management surface:
+
+    1. Partner API (base /partners/v2) - for booking channels to read availability and post reservations.
+
+    2. Concierge API (base /concierge/v2) - for restaurants, vendors, and groups to sync reservations, guests, availability, and reference data (resources, groups, restaurants). Requests are scoped with X-Group-ID and X-Restaurant-ID headers and can be created idempotently via an idempotency_token.
+
+    3. Tables and Floor Plans (base /concierge/v2) - MODELED. No public tables or floorplan endpoints are documented; these operations are honestly modeled on Eat App''s documented resource conventions and should be confirmed with a partner API key before use.
+
+    All responses follow a JSON:API-style structure (data objects carrying id, type, and attributes). Every request is authenticated with a Bearer token (the API key Eat App issues to a partner or Concierge user). The sandbox host is https://api.eat-sandbox.co and production is https://api.eatapp.co. Endpoints are rate limited to roughly 60 requests per minute.'
+  version: '2.0'
+  contact:
+    name: Eat App
+    url: https://eatapp.co
+servers:
+- url: https://api.eatapp.co
+  description: Production
+- url: https://api.eat-sandbox.co
+  description: Sandbox
+security:
+- bearerAuth: []
+tags:
+- name: Concierge - Reservations
+  description: Concierge reservation create, list, get, and update/cancel.
+paths:
+  /concierge/v2/reservations:
+    get:
+      operationId: listConciergeReservations
+      tags:
+      - Concierge - Reservations
+      summary: List reservations
+      description: Lists reservations for a restaurant with filtering options. Requires the X-Restaurant-ID header.
+      parameters:
+      - $ref: '#/components/parameters/RestaurantIdHeader'
+      - name: date
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Filter reservations by date.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter reservations by status.
+      responses:
+        '200':
+          description: A JSON:API document of reservations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createConciergeReservation
+      tags:
+      - Concierge - Reservations
+      summary: Create a reservation
+      description: Creates a new reservation. Requires the X-Restaurant-ID header and an idempotency_token to safely retry. Confirmed from the public Concierge docs.
+      parameters:
+      - $ref: '#/components/parameters/RestaurantIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConciergeReservationInput'
+      responses:
+        '201':
+          description: The created reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /concierge/v2/reservations/{id_or_key}:
+    parameters:
+    - $ref: '#/components/parameters/IdOrKey'
+    - $ref: '#/components/parameters/RestaurantIdHeader'
+    get:
+      operationId: getConciergeReservation
+      tags:
+      - Concierge - Reservations
+      summary: Get a reservation
+      description: Retrieves a single reservation by id or key.
+      responses:
+        '200':
+          description: The requested reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateConciergeReservation
+      tags:
+      - Concierge - Reservations
+      summary: Update or cancel a reservation
+      description: Modifies an existing reservation or cancels it (by setting its status).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConciergeReservationInput'
+      responses:
+        '200':
+          description: The updated reservation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+components:
+  responses:
+    ValidationError:
+      description: The request body failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    ReservationListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    ConciergeReservationInput:
+      type: object
+      properties:
+        idempotency_token:
+          type: string
+          description: Required on create to make the request safely retryable.
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+        guests:
+          type: integer
+        status:
+          type: string
+          description: Set to a cancelled status to cancel the reservation.
+        preference_id:
+          type: string
+        guest:
+          $ref: '#/components/schemas/GuestInput'
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+    ResourceObject:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+    ReservationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+  parameters:
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
+    IdOrKey:
+      name: id_or_key
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The reservation id or reservation key.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token (the API key Eat App issues to a partner or Concierge user). Sent as Authorization: Bearer <api_token>.'
