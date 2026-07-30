@@ -12,7 +12,20 @@ description: Eat App is a restaurant reservation and table management platform u
   api.eat-sandbox.co sandbox mirroring api.eatapp.co production. Eat App also exposes
   a Restaurant MCP server for connecting AI assistants. API access is granted on
   request rather than fully self-serve.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/eat-app.png
 tags:
 - Restaurant
 - Reservations
@@ -25,134 +38,169 @@ created: '2026-07-05'
 modified: '2026-07-05'
 specificationVersion: '0.19'
 apis:
-- aid: eat-app:eat-app-partner-api
-  name: Eat App Partner API
-  tags:
-  - Partner
-  - Availability
-  - Reservations
-  - Booking Channels
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
-  baseURL: https://api.eatapp.co/partners/v2
-  properties:
-  - url: https://restaurant.eatapp.co/knowledge/documentation
-    type: Documentation
-  - url: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
-    type: APIReference
-  - url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
-    type: PostmanDocumentation
-  - url: openapi/eat-app-openapi.yml
-    type: OpenAPI
-  - url: collections/eat-app.postman_collection.json
-    type: PostmanCollection
-  description: Partner-facing API for booking platforms and reservation channels to
-    query real-time restaurant availability and post reservations into Eat App. Uses
-    JSON:API responses and Bearer-token auth against api.eat-sandbox.co (sandbox) and
-    api.eatapp.co (production). Endpoints confirmed from public partner docs and the
-    published Postman collection.
-- aid: eat-app:eat-app-concierge-reservations-api
-  name: Eat App Concierge Reservations API
-  tags:
-  - Concierge
-  - Reservations
-  - Bookings
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-  baseURL: https://api.eatapp.co/concierge/v2
-  properties:
-  - url: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-    type: APIReference
-  - url: openapi/eat-app-openapi.yml
-    type: OpenAPI
-  - url: collections/eat-app.postman_collection.json
-    type: PostmanCollection
-  description: Concierge API surface for creating, listing, retrieving, and modifying
-    (or cancelling) reservations across a restaurant group. Create requires an
-    X-Restaurant-ID header and an idempotency_token. Scoped with X-Group-ID /
-    X-Restaurant-ID headers and authenticated with a Concierge API key. Endpoints
-    confirmed from public Concierge docs.
-- aid: eat-app:eat-app-concierge-guests-api
-  name: Eat App Concierge Guests API
-  tags:
-  - Concierge
-  - Guests
-  - CRM
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-  baseURL: https://api.eatapp.co/concierge/v2
-  properties:
-  - url: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-    type: APIReference
-  - url: openapi/eat-app-openapi.yml
-    type: OpenAPI
-  - url: collections/eat-app.postman_collection.json
-    type: PostmanCollection
-  description: Search the guest CRM and retrieve individual guest profiles for a
-    restaurant. Supports guest search by query parameter and single-guest lookup by
-    id, so partners can sync guest data alongside reservations. Endpoints confirmed
-    from public Concierge docs.
 - aid: eat-app:eat-app-concierge-availability-api
-  name: Eat App Concierge Availability API
+  name: Eat App Concierge - Availability API
+  description: Concierge bookable time-slot lookups over a date range.
+  humanURL: >-
+    https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  baseURL: https://api.eatapp.co/partners/v2
   tags:
-  - Concierge
-  - Availability
-  - Time Slots
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-  baseURL: https://api.eatapp.co/concierge/v2
+  - Concierge - Availability
   properties:
-  - url: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-    type: APIReference
-  - url: openapi/eat-app-openapi.yml
-    type: OpenAPI
-  - url: collections/eat-app.postman_collection.json
-    type: PostmanCollection
-  description: Query bookable time slots for a restaurant across a date range via the
-    Concierge availability range endpoint, returning the slots a reservation can be
-    placed into. Endpoint confirmed from public Concierge docs.
-- aid: eat-app:eat-app-concierge-restaurants-api
-  name: Eat App Concierge Restaurants and Groups API
+  - type: OpenAPI
+    url: openapi/eat-app-concierge-availability-api-openapi.yml
+  - type: Documentation
+    url: https://restaurant.eatapp.co/knowledge/documentation
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  - type: PostmanDocumentation
+    url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+  - type: PostmanCollection
+    url: collections/eat-app.postman_collection.json
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+- aid: eat-app:eat-app-concierge-guests-api
+  name: Eat App Concierge - Guests API
+  description: Concierge guest search and profile retrieval.
+  humanURL: >-
+    https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  baseURL: https://api.eatapp.co/partners/v2
   tags:
-  - Concierge
-  - Restaurants
-  - Groups
-  - Reference Data
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-  baseURL: https://api.eatapp.co/concierge/v2
+  - Concierge - Guests
   properties:
-  - url: https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
-    type: APIReference
-  - url: openapi/eat-app-openapi.yml
-    type: OpenAPI
-  - url: collections/eat-app.postman_collection.json
-    type: PostmanCollection
-  description: Bootstrap and reference surface for the Concierge API - load reference
-    data (resources) for dropdowns and validation, list the groups a Concierge user
-    can access, and list the restaurants within a group (via X-Group-ID). Endpoints
-    confirmed from public Concierge docs.
-- aid: eat-app:eat-app-tables-floorplan-api
-  name: Eat App Tables and Floorplan API
+  - type: OpenAPI
+    url: openapi/eat-app-concierge-guests-api-openapi.yml
+  - type: Documentation
+    url: https://restaurant.eatapp.co/knowledge/documentation
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  - type: PostmanDocumentation
+    url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+  - type: PostmanCollection
+    url: collections/eat-app.postman_collection.json
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+- aid: eat-app:eat-app-concierge-reference-api
+  name: Eat App Concierge - Reference API
+  description: Concierge bootstrap data - resources, groups, restaurants.
+  humanURL: >-
+    https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  baseURL: https://api.eatapp.co/partners/v2
   tags:
-  - Tables
-  - Floorplans
-  - Table Management
-  - Modeled
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://eatapp.co/integrations
-  baseURL: https://api.eatapp.co/concierge/v2
+  - Concierge - Reference
   properties:
-  - url: https://restaurant.eatapp.co/knowledge/documentation
-    type: Documentation
-  - url: openapi/eat-app-openapi.yml
-    type: OpenAPI
-  description: Table and floor-plan management is core to the Eat App platform, but no
-    public tables or floorplan endpoints are documented in the Partner or Concierge
-    references as of the review date. The endpoints modeled here (list tables, list
-    floor plans, get table) are HONESTLY MODELED on Eat App's documented resource
-    conventions and marked as endpointsModeled - they should be confirmed against a
-    partner API key before use.
+  - type: OpenAPI
+    url: openapi/eat-app-concierge-reference-api-openapi.yml
+  - type: Documentation
+    url: https://restaurant.eatapp.co/knowledge/documentation
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  - type: PostmanDocumentation
+    url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+  - type: PostmanCollection
+    url: collections/eat-app.postman_collection.json
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+- aid: eat-app:eat-app-concierge-reservations-api
+  name: Eat App Concierge - Reservations API
+  description: Concierge reservation create, list, get, and update/cancel.
+  humanURL: >-
+    https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  baseURL: https://api.eatapp.co/partners/v2
+  tags:
+  - Concierge - Reservations
+  properties:
+  - type: OpenAPI
+    url: openapi/eat-app-concierge-reservations-api-openapi.yml
+  - type: Documentation
+    url: https://restaurant.eatapp.co/knowledge/documentation
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  - type: PostmanDocumentation
+    url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+  - type: PostmanCollection
+    url: collections/eat-app.postman_collection.json
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+- aid: eat-app:eat-app-partner-availability-api
+  name: Eat App Partner - Availability API
+  description: Partner API real-time availability lookups.
+  humanURL: >-
+    https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  baseURL: https://api.eatapp.co/partners/v2
+  tags:
+  - Partner - Availability
+  properties:
+  - type: OpenAPI
+    url: openapi/eat-app-partner-availability-api-openapi.yml
+  - type: Documentation
+    url: https://restaurant.eatapp.co/knowledge/documentation
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  - type: PostmanDocumentation
+    url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+  - type: PostmanCollection
+    url: collections/eat-app.postman_collection.json
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+- aid: eat-app:eat-app-partner-reservations-api
+  name: Eat App Partner - Reservations API
+  description: Partner API reservation creation.
+  humanURL: >-
+    https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  baseURL: https://api.eatapp.co/partners/v2
+  tags:
+  - Partner - Reservations
+  properties:
+  - type: OpenAPI
+    url: openapi/eat-app-partner-reservations-api-openapi.yml
+  - type: Documentation
+    url: https://restaurant.eatapp.co/knowledge/documentation
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  - type: PostmanDocumentation
+    url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+  - type: PostmanCollection
+    url: collections/eat-app.postman_collection.json
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
+- aid: eat-app:eat-app-tables-and-floor-plans-modeled-api
+  name: Eat App Tables and Floor Plans (Modeled) API
+  description: >-
+    Honestly-modeled table and floor-plan operations. Not documented in the public Partner or Concierge
+    references; confirm before use.
+  humanURL: >-
+    https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  baseURL: https://api.eatapp.co/partners/v2
+  tags:
+  - Tables and Floor Plans (Modeled)
+  properties:
+  - type: OpenAPI
+    url: openapi/eat-app-tables-and-floor-plans-modeled-api-openapi.yml
+  - type: Documentation
+    url: https://restaurant.eatapp.co/knowledge/documentation
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability
+  - type: PostmanDocumentation
+    url: https://documenter.getpostman.com/view/6173104/S1Lr4Av4
+  - type: PostmanCollection
+    url: collections/eat-app.postman_collection.json
+  - type: APIReference
+    url: >-
+      https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
 common:
 - type: AgenticAccess
   url: agentic-access/eat-app-agentic-access.yml
