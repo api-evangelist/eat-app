@@ -1,0 +1,26 @@
+{
+  "provider": "eat-app",
+  "sources": [
+    "eat-app-concierge-availability-api-openapi.yml",
+    "eat-app-concierge-guests-api-openapi.yml",
+    "eat-app-concierge-reference-api-openapi.yml",
+    "eat-app-concierge-reservations-api-openapi.yml",
+    "eat-app-partner-availability-api-openapi.yml",
+    "eat-app-partner-reservations-api-openapi.yml",
+    "eat-app-tables-and-floor-plans-modeled-api-openapi.yml"
+  ],
+  "outputs": [
+    "eat-app-concierge-availability-api-openapi.yml",
+    "eat-app-concierge-guests-api-openapi.yml",
+    "eat-app-concierge-reference-api-openapi.yml",
+    "eat-app-concierge-reservations-api-openapi.yml",
+    "eat-app-partner-availability-api-openapi.yml",
+    "eat-app-partner-reservations-api-openapi.yml",
+    "eat-app-tables-and-floor-plans-modeled-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
