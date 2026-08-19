@@ -36,7 +36,7 @@ tags:
 - Availability
 created: '2026-07-05'
 modified: '2026-07-05'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: eat-app:eat-app-concierge-availability-api
   name: Eat App Concierge - Availability API
