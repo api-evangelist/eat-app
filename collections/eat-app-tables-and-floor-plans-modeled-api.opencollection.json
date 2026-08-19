@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Eat App Platform Concierge - Availability Tables and Floor Plans (Modeled) API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tables and Floor Plans (Modeled)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tables (MODELED)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/tables",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "MODELED, not documented. Lists the tables configured for a restaurant. Confirm the real path and shape with a partner API key before use."
+        },
+        {
+          "info": {
+            "name": "Get a table (MODELED)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/tables/:table_id",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "MODELED, not documented. Retrieves a single table by id."
+        },
+        {
+          "info": {
+            "name": "List floor plans (MODELED)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/floor_plans",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "MODELED, not documented. Lists the floor plans (dining areas / room layouts) configured for a restaurant. Confirm before use."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

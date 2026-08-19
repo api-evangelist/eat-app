@@ -1,0 +1,271 @@
+{
+  "item": [
+    {
+      "id": "cc4e30c8-50bc-405c-8da5-c4ccbaf8d41d",
+      "name": "Partner - Availability",
+      "description": {
+        "content": "Partner API real-time availability lookups.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "cf67aa09-3f94-4d7f-a037-9828a4d0ced6",
+          "name": "Get availability (Partner)",
+          "request": {
+            "name": "Get availability (Partner)",
+            "description": {
+              "content": "Returns bookable availability for a restaurant on a given date. Confirmed from the public Partner API documentation.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "partners",
+                "v2",
+                "availability"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "restaurant_id",
+                  "value": "<string>",
+                  "description": "(Required) The Eat App restaurant identifier."
+                },
+                {
+                  "disabled": false,
+                  "key": "date",
+                  "value": "<date>",
+                  "description": "(Required) The date to check availability for (YYYY-MM-DD)."
+                },
+                {
+                  "disabled": false,
+                  "key": "guests",
+                  "value": "<integer>",
+                  "description": "Party size to check availability for."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a8361e51-aa82-49fe-979d-291cae3e2143",
+              "name": "A JSON:API document of available time slots.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "partners",
+                    "v2",
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "restaurant_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "guests",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"type\": \"availability\",\n      \"attributes\": {\n        \"time\": \"string\",\n        \"available\": true,\n        \"preference_id\": \"string\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"type\": \"availability\",\n      \"attributes\": {\n        \"time\": \"string\",\n        \"available\": true,\n        \"preference_id\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "59434381-ab43-4efe-b4cc-f1c7589a6a4e",
+              "name": "Missing or invalid Bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "partners",
+                    "v2",
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "restaurant_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "guests",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c4ce5c92-ade5-4ab8-820a-9b7610546920",
+              "name": "Too many requests (approximately 60 requests per minute).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "partners",
+                    "v2",
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "restaurant_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "guests",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.eatapp.co",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "44886fa9-5b4c-4632-985c-dbad4ed68522",
+    "name": "Eat App Platform Concierge - Availability Partner - Availability API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Eat App is a restaurant reservation and table management platform. This document models its two documented, partner/key-gated REST surfaces plus a small honestly-modeled table-management surface:\n1. Partner API (base /partners/v2) - for booking channels to read availability and post reservations.\n2. Concierge API (base /concierge/v2) - for restaurants, vendors, and groups to sync reservations, guests, availability, and reference data (resources, groups, restaurants). Requests are scoped with X-Group-ID and X-Restaurant-ID headers and can be created idempotently via an idempotency_token.\n3. Tables and Floor Plans (base /concierge/v2) - MODELED. No public tables or floorplan endpoints are documented; these operations are honestly modeled on Eat App's documented resource conventions and should be confirmed with a partner API key before use.\nAll responses follow a JSON:API-style structure (data objects carrying id, type, and attributes). Every request is authenticated with a Bearer token (the API key Eat App issues to a partner or Concierge user). The sandbox host is https://api.eat-sandbox.co and production is https://api.eatapp.co. Endpoints are rate limited to roughly 60 requests per minute.\n\nContact Support:\n Name: Eat App",
+      "type": "text/plain"
+    }
+  }
+}

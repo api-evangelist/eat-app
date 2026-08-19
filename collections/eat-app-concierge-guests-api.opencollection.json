@@ -1,0 +1,73 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Eat App Platform Concierge - Availability Concierge - Guests API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Concierge - Guests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search guests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/guests",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Free-text guest search (name, phone, email)."
+              }
+            ]
+          },
+          "docs": "Searches the guest CRM by query parameter. Requires the X-Restaurant-ID header. Confirmed from the public Concierge docs."
+        },
+        {
+          "info": {
+            "name": "Get a guest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/guests/:guest_id",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "guest_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves an individual guest profile by id."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,130 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Eat App Platform Concierge - Availability Concierge - Reservations API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Concierge - Reservations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List reservations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/reservations",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "date",
+                "value": "",
+                "type": "query",
+                "description": "Filter reservations by date."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter reservations by status."
+              }
+            ]
+          },
+          "docs": "Lists reservations for a restaurant with filtering options. Requires the X-Restaurant-ID header."
+        },
+        {
+          "info": {
+            "name": "Create a reservation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.eatapp.co/concierge/v2/reservations",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new reservation. Requires the X-Restaurant-ID header and an idempotency_token to safely retry. Confirmed from the public Concierge docs."
+        },
+        {
+          "info": {
+            "name": "Get a reservation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/reservations/:id_or_key",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id_or_key",
+                "value": "",
+                "type": "path",
+                "description": "The reservation id or reservation key."
+              }
+            ]
+          },
+          "docs": "Retrieves a single reservation by id or key."
+        },
+        {
+          "info": {
+            "name": "Update or cancel a reservation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.eatapp.co/concierge/v2/reservations/:id_or_key",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id_or_key",
+                "value": "",
+                "type": "path",
+                "description": "The reservation id or reservation key."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies an existing reservation or cancels it (by setting its status)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

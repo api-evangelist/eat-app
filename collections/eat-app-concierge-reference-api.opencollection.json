@@ -1,0 +1,63 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Eat App Platform Concierge - Availability Concierge - Reference API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Concierge - Reference",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get reference data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/resources"
+          },
+          "docs": "Loads reference data used for dropdowns and validation (e.g. reservation statuses, sources, tags). Confirmed from the public Concierge docs."
+        },
+        {
+          "info": {
+            "name": "List accessible groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/groups"
+          },
+          "docs": "Lists the groups the authenticated Concierge user can access."
+        },
+        {
+          "info": {
+            "name": "List restaurants in a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/concierge/v2/restaurants",
+            "headers": [
+              {
+                "name": "X-Group-ID",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Lists restaurants within a group. Requires the X-Group-ID header. Confirmed from the public Concierge docs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

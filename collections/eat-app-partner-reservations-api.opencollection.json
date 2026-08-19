@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Eat App Platform Concierge - Availability Partner - Reservations API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Partner - Reservations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Post a reservation (Partner)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.eatapp.co/partners/v2/reservations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a reservation for a restaurant on behalf of a booking channel. Confirmed from the public Partner API documentation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

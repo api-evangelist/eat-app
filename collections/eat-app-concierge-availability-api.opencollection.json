@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Eat App Platform Concierge - Availability API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Concierge - Availability",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query availability over a date range",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.eatapp.co/concierge/v2/availability/range",
+            "headers": [
+              {
+                "name": "X-Restaurant-ID",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns bookable time slots for a restaurant across a date range. Requires the X-Restaurant-ID header. Confirmed from the public Concierge docs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

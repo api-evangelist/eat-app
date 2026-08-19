@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Eat App Platform Concierge - Availability Partner - Availability API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Partner - Availability",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get availability (Partner)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.eatapp.co/partners/v2/availability",
+            "params": [
+              {
+                "name": "restaurant_id",
+                "value": "",
+                "type": "query",
+                "description": "The Eat App restaurant identifier."
+              },
+              {
+                "name": "date",
+                "value": "",
+                "type": "query",
+                "description": "The date to check availability for (YYYY-MM-DD)."
+              },
+              {
+                "name": "guests",
+                "value": "",
+                "type": "query",
+                "description": "Party size to check availability for."
+              }
+            ]
+          },
+          "docs": "Returns bookable availability for a restaurant on a given date. Confirmed from the public Partner API documentation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
