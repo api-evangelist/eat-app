@@ -1,0 +1,44 @@
+slug: eat-app
+provider: Eat App
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Travel & Hospitality
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Concierge - Reservations
+  spec_file: eat-app-concierge-reservations-api-openapi.yml
+  capability_id: BC-4070.40
+  capability_id_l1: BC-4070
+  capability_name: Restaurant & Outlet Service Operations
+  confidence: 0.75
+  evidence: '"POST /concierge/v2/reservations  createConciergeReservation  Create a reservation"; "Update
+    or cancel a reservation"'
+  reason: Full lifecycle of restaurant table reservations, which the frame places under restaurant and
+    outlet service operations (reservation, seating, cover management).
+- tag: Concierge - Guests
+  spec_file: eat-app-concierge-guests-api-openapi.yml
+  capability_id: BC-4040.10
+  capability_id_l1: BC-4040
+  capability_name: Guest Profile & Identity Management
+  confidence: 0.7
+  evidence: '"GET /concierge/v2/guests  searchConciergeGuests  Search guests"; vendor "build guest CRM
+    profiles"'
+  reason: Read/search of the guest profile record maintained by the hospitality platform maps to guest
+    profile and identity stewardship.
+- tag: Partner - Reservations
+  spec_file: eat-app-partner-reservations-api-openapi.yml
+  capability_id: BC-4070.40
+  capability_id_l1: BC-4070
+  capability_name: Restaurant & Outlet Service Operations
+  confidence: 0.7
+  evidence: '"POST /partners/v2/reservations  createPartnerReservation  Post a reservation (Partner)"'
+  reason: Third-party channels posting restaurant table reservations — restaurant reservation service
+    operations.

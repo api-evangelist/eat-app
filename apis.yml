@@ -214,6 +214,9 @@ apis:
     url: >-
       https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
 common:
+- type: CapabilityMap
+  url: capabilities/eat-app-capability-edges.yml
+  name: Eat App Business Capability Map
 - type: AgenticAccess
   url: agentic-access/eat-app-agentic-access.yml
 - type: DomainSecurity
