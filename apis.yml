@@ -12,6 +12,18 @@ description: Eat App is a restaurant reservation and table management platform u
   api.eat-sandbox.co sandbox mirroring api.eatapp.co production. Eat App also exposes
   a Restaurant MCP server for connecting AI assistants. API access is granted on
   request rather than fully self-serve.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
