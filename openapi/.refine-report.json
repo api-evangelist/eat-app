@@ -1,13 +1,7 @@
 {
   "provider": "eat-app",
   "sources": [
-    "eat-app-concierge-availability-api-openapi.yml",
-    "eat-app-concierge-guests-api-openapi.yml",
-    "eat-app-concierge-reference-api-openapi.yml",
-    "eat-app-concierge-reservations-api-openapi.yml",
-    "eat-app-partner-availability-api-openapi.yml",
-    "eat-app-partner-reservations-api-openapi.yml",
-    "eat-app-tables-and-floor-plans-modeled-api-openapi.yml"
+    "_original/eat-app-openapi.yml"
   ],
   "outputs": [
     "eat-app-concierge-availability-api-openapi.yml",
@@ -21,6 +15,18 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "eat-app-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "eat-app-concierge-availability-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "eat-app-concierge-guests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "eat-app-concierge-reference-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "eat-app-concierge-reservations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "eat-app-partner-availability-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "eat-app-partner-reservations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "eat-app-tables-and-floor-plans-modeled-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

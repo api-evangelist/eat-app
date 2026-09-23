@@ -1,15 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Eat App Platform Concierge - Availability Partner - Reservations API
-  description: 'Eat App is a restaurant reservation and table management platform. This document models its two documented, partner/key-gated REST surfaces plus a small honestly-modeled table-management surface:
-
-    1. Partner API (base /partners/v2) - for booking channels to read availability and post reservations.
-
-    2. Concierge API (base /concierge/v2) - for restaurants, vendors, and groups to sync reservations, guests, availability, and reference data (resources, groups, restaurants). Requests are scoped with X-Group-ID and X-Restaurant-ID headers and can be created idempotently via an idempotency_token.
-
-    3. Tables and Floor Plans (base /concierge/v2) - MODELED. No public tables or floorplan endpoints are documented; these operations are honestly modeled on Eat App''s documented resource conventions and should be confirmed with a partner API key before use.
-
-    All responses follow a JSON:API-style structure (data objects carrying id, type, and attributes). Every request is authenticated with a Bearer token (the API key Eat App issues to a partner or Concierge user). The sandbox host is https://api.eat-sandbox.co and production is https://api.eatapp.co. Endpoints are rate limited to roughly 60 requests per minute.'
+  title: Eat App Platform Partner - Reservations API
+  description: Eat App is a restaurant reservation and table management platform.
   version: '2.0'
   contact:
     name: Eat App
@@ -59,19 +51,35 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     RateLimited:
       description: Too many requests (approximately 60 requests per minute).
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+    ReservationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
     PartnerReservationInput:
       type: object
       required:
@@ -93,32 +101,6 @@ components:
           type: string
         guest:
           $ref: '#/components/schemas/GuestInput'
-    GuestInput:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
-    ResourceObject:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-    ReservationResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
     Error:
       type: object
       properties:
@@ -133,6 +115,16 @@ components:
                 type: string
               detail:
                 type: string
+    ResourceObject:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
   securitySchemes:
     bearerAuth:
       type: http

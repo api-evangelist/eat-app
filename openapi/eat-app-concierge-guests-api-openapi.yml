@@ -1,15 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Eat App Platform Concierge - Availability Concierge - Guests API
-  description: 'Eat App is a restaurant reservation and table management platform. This document models its two documented, partner/key-gated REST surfaces plus a small honestly-modeled table-management surface:
-
-    1. Partner API (base /partners/v2) - for booking channels to read availability and post reservations.
-
-    2. Concierge API (base /concierge/v2) - for restaurants, vendors, and groups to sync reservations, guests, availability, and reference data (resources, groups, restaurants). Requests are scoped with X-Group-ID and X-Restaurant-ID headers and can be created idempotently via an idempotency_token.
-
-    3. Tables and Floor Plans (base /concierge/v2) - MODELED. No public tables or floorplan endpoints are documented; these operations are honestly modeled on Eat App''s documented resource conventions and should be confirmed with a partner API key before use.
-
-    All responses follow a JSON:API-style structure (data objects carrying id, type, and attributes). Every request is authenticated with a Bearer token (the API key Eat App issues to a partner or Concierge user). The sandbox host is https://api.eat-sandbox.co and production is https://api.eatapp.co. Endpoints are rate limited to roughly 60 requests per minute.'
+  title: Eat App Platform Concierge - Guests API
+  description: Eat App is a restaurant reservation and table management platform.
   version: '2.0'
   contact:
     name: Eat App
@@ -75,19 +67,14 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
   schemas:
     GuestListResponse:
       type: object
@@ -96,6 +83,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceObject'
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
     GuestResponse:
       type: object
       properties:
@@ -111,28 +112,19 @@ components:
         attributes:
           type: object
           additionalProperties: true
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-  parameters:
-    RestaurantIdHeader:
-      name: X-Restaurant-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific restaurant.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
