@@ -120,40 +120,6 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
-  responses:
-    ValidationError:
-      description: The request body failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    RestaurantIdHeader:
-      name: X-Restaurant-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific restaurant.
-    IdOrKey:
-      name: id_or_key
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The reservation id or reservation key.
   schemas:
     ReservationListResponse:
       type: object
@@ -162,17 +128,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceObject'
-    GuestInput:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
     ReservationResponse:
       type: object
       properties:
@@ -222,6 +177,51 @@ components:
         attributes:
           type: object
           additionalProperties: true
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+  responses:
+    ValidationError:
+      description: The request body failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    IdOrKey:
+      name: id_or_key
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The reservation id or reservation key.
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
   securitySchemes:
     bearerAuth:
       type: http

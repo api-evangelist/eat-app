@@ -67,22 +67,20 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    RestaurantIdHeader:
-      name: X-Restaurant-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific restaurant.
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    GuestListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
     Error:
       type: object
       properties:
@@ -97,6 +95,13 @@ components:
                 type: string
               detail:
                 type: string
+    GuestListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
     GuestResponse:
       type: object
       properties:
@@ -112,19 +117,14 @@ components:
         attributes:
           type: object
           additionalProperties: true
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
   securitySchemes:
     bearerAuth:
       type: http

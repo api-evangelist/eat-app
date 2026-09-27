@@ -51,56 +51,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Too many requests (approximately 60 requests per minute).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid Bearer token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests (approximately 60 requests per minute).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    GuestInput:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
     ReservationResponse:
       type: object
       properties:
         data:
           $ref: '#/components/schemas/ResourceObject'
-    PartnerReservationInput:
-      type: object
-      required:
-      - restaurant_id
-      - date
-      - time
-      - guests
-      properties:
-        restaurant_id:
-          type: string
-        date:
-          type: string
-          format: date
-        time:
-          type: string
-        guests:
-          type: integer
-        preference_id:
-          type: string
-        guest:
-          $ref: '#/components/schemas/GuestInput'
     Error:
       type: object
       properties:
@@ -125,6 +93,38 @@ components:
         attributes:
           type: object
           additionalProperties: true
+    PartnerReservationInput:
+      type: object
+      required:
+      - restaurant_id
+      - date
+      - time
+      - guests
+      properties:
+        restaurant_id:
+          type: string
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+        guests:
+          type: integer
+        preference_id:
+          type: string
+        guest:
+          $ref: '#/components/schemas/GuestInput'
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

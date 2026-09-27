@@ -45,42 +45,33 @@ paths:
           $ref: '#/components/responses/ValidationError'
 components:
   responses:
-    ValidationError:
-      description: The request body failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid Bearer token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    RestaurantIdHeader:
-      name: X-Restaurant-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific restaurant.
+    ValidationError:
+      description: The request body failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    AvailabilityRangeInput:
+    Error:
       type: object
-      required:
-      - start_date
-      - end_date
-      - guests
       properties:
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        guests:
-          type: integer
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
     AvailabilityResponse:
       type: object
       properties:
@@ -103,20 +94,29 @@ components:
                     type: boolean
                   preference_id:
                     type: string
-    Error:
+    AvailabilityRangeInput:
       type: object
+      required:
+      - start_date
+      - end_date
+      - guests
       properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        guests:
+          type: integer
+  parameters:
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
   securitySchemes:
     bearerAuth:
       type: http

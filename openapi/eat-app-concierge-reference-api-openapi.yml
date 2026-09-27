@@ -102,13 +102,6 @@ components:
         attributes:
           type: object
           additionalProperties: true
-  responses:
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
     GroupIdHeader:
       name: X-Group-ID
@@ -117,6 +110,13 @@ components:
       schema:
         type: string
       description: Scopes the request to a specific group.
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

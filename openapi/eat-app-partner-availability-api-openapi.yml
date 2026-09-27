@@ -70,6 +70,20 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
     AvailabilityResponse:
       type: object
       properties:
@@ -92,20 +106,6 @@ components:
                     type: boolean
                   preference_id:
                     type: string
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
   securitySchemes:
     bearerAuth:
       type: http
