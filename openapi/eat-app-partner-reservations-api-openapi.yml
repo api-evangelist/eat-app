@@ -45,14 +45,14 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   responses:
-    ValidationError:
-      description: The request body failed validation.
+    Unauthorized:
+      description: Missing or invalid Bearer token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
+    ValidationError:
+      description: The request body failed validation.
       content:
         application/json:
           schema:
@@ -64,11 +64,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    ReservationResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
     Error:
       type: object
       properties:
@@ -83,6 +78,22 @@ components:
                 type: string
               detail:
                 type: string
+    ReservationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
     ResourceObject:
       type: object
       properties:
@@ -114,17 +125,6 @@ components:
           type: string
         guest:
           $ref: '#/components/schemas/GuestInput'
-    GuestInput:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

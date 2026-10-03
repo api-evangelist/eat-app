@@ -80,6 +80,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
   schemas:
     Error:
       type: object
@@ -95,13 +103,6 @@ components:
                 type: string
               detail:
                 type: string
-    GuestListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
     GuestResponse:
       type: object
       properties:
@@ -117,14 +118,13 @@ components:
         attributes:
           type: object
           additionalProperties: true
-  parameters:
-    RestaurantIdHeader:
-      name: X-Restaurant-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific restaurant.
+    GuestListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
   securitySchemes:
     bearerAuth:
       type: http

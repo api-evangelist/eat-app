@@ -120,7 +120,66 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request body failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    ReservationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+    ResourceObject:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
     ReservationListResponse:
       type: object
       properties:
@@ -128,11 +187,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceObject'
-    ReservationResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
     ConciergeReservationInput:
       type: object
       properties:
@@ -153,68 +207,7 @@ components:
           type: string
         guest:
           $ref: '#/components/schemas/GuestInput'
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-    ResourceObject:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-    GuestInput:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
-  responses:
-    ValidationError:
-      description: The request body failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
-    IdOrKey:
-      name: id_or_key
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The reservation id or reservation key.
     RestaurantIdHeader:
       name: X-Restaurant-ID
       in: header
@@ -222,6 +215,13 @@ components:
       schema:
         type: string
       description: Scopes the request to a specific restaurant.
+    IdOrKey:
+      name: id_or_key
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The reservation id or reservation key.
   securitySchemes:
     bearerAuth:
       type: http
