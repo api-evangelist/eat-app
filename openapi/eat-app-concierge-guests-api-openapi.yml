@@ -67,6 +67,43 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  schemas:
+    GuestListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    GuestResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    ResourceObject:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
   responses:
     Unauthorized:
       description: Missing or invalid Bearer token.
@@ -88,43 +125,6 @@ components:
       schema:
         type: string
       description: Scopes the request to a specific restaurant.
-  schemas:
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-    GuestResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-    ResourceObject:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-    GuestListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
   securitySchemes:
     bearerAuth:
       type: http

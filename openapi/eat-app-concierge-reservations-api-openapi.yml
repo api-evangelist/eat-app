@@ -120,26 +120,47 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ValidationError:
-      description: The request body failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    IdOrKey:
+      name: id_or_key
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The reservation id or reservation key.
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
   schemas:
+    ConciergeReservationInput:
+      type: object
+      properties:
+        idempotency_token:
+          type: string
+          description: Required on create to make the request safely retryable.
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+        guests:
+          type: integer
+        status:
+          type: string
+          description: Set to a cancelled status to cancel the reservation.
+        preference_id:
+          type: string
+        guest:
+          $ref: '#/components/schemas/GuestInput'
+    ReservationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
     Error:
       type: object
       properties:
@@ -154,11 +175,13 @@ components:
                 type: string
               detail:
                 type: string
-    ReservationResponse:
+    ReservationListResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/ResourceObject'
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
     GuestInput:
       type: object
       properties:
@@ -180,48 +203,25 @@ components:
         attributes:
           type: object
           additionalProperties: true
-    ReservationListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
-    ConciergeReservationInput:
-      type: object
-      properties:
-        idempotency_token:
-          type: string
-          description: Required on create to make the request safely retryable.
-        date:
-          type: string
-          format: date
-        time:
-          type: string
-        guests:
-          type: integer
-        status:
-          type: string
-          description: Set to a cancelled status to cancel the reservation.
-        preference_id:
-          type: string
-        guest:
-          $ref: '#/components/schemas/GuestInput'
-  parameters:
-    RestaurantIdHeader:
-      name: X-Restaurant-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific restaurant.
-    IdOrKey:
-      name: id_or_key
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The reservation id or reservation key.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: The request body failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

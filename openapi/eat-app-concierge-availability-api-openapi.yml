@@ -58,20 +58,21 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    Error:
+    AvailabilityRangeInput:
       type: object
+      required:
+      - start_date
+      - end_date
+      - guests
       properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        guests:
+          type: integer
     AvailabilityResponse:
       type: object
       properties:
@@ -94,21 +95,20 @@ components:
                     type: boolean
                   preference_id:
                     type: string
-    AvailabilityRangeInput:
+    Error:
       type: object
-      required:
-      - start_date
-      - end_date
-      - guests
       properties:
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        guests:
-          type: integer
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
   parameters:
     RestaurantIdHeader:
       name: X-Restaurant-ID

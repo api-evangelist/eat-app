@@ -75,6 +75,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    GroupIdHeader:
+      name: X-Group-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific group.
   schemas:
     Error:
       type: object
@@ -90,6 +98,15 @@ components:
                 type: string
               detail:
                 type: string
+    GenericResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+          - $ref: '#/components/schemas/ResourceObject'
+          - type: array
+            items:
+              $ref: '#/components/schemas/ResourceObject'
     ResourceObject:
       type: object
       properties:
@@ -100,23 +117,6 @@ components:
         attributes:
           type: object
           additionalProperties: true
-    GenericResponse:
-      type: object
-      properties:
-        data:
-          oneOf:
-          - $ref: '#/components/schemas/ResourceObject'
-          - type: array
-            items:
-              $ref: '#/components/schemas/ResourceObject'
-  parameters:
-    GroupIdHeader:
-      name: X-Group-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific group.
   securitySchemes:
     bearerAuth:
       type: http

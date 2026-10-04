@@ -80,14 +80,14 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   responses:
-    Unauthorized:
-      description: Missing or invalid Bearer token.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid Bearer token.
       content:
         application/json:
           schema:
@@ -107,6 +107,15 @@ components:
                 type: string
               detail:
                 type: string
+    GenericResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+          - $ref: '#/components/schemas/ResourceObject'
+          - type: array
+            items:
+              $ref: '#/components/schemas/ResourceObject'
     ResourceObject:
       type: object
       properties:
@@ -117,15 +126,6 @@ components:
         attributes:
           type: object
           additionalProperties: true
-    GenericResponse:
-      type: object
-      properties:
-        data:
-          oneOf:
-          - $ref: '#/components/schemas/ResourceObject'
-          - type: array
-            items:
-              $ref: '#/components/schemas/ResourceObject'
   parameters:
     RestaurantIdHeader:
       name: X-Restaurant-ID
