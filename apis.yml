@@ -59,7 +59,7 @@ tags_raw:
 - Guest CRM
 - Availability
 created: '2026-07-05'
-modified: '2026-07-05'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: eat-app:eat-app-concierge-availability-api
@@ -226,6 +226,8 @@ apis:
     url: >-
       https://restaurant.eatapp.co/knowledge/using-the-eat-app-partner-api-to-get-and-post-availability-0
 common:
+- url: https://restaurant.eatapp.co/blog/rss.xml
+  type: BlogRSS
 - type: CapabilityMap
   url: capabilities/eat-app-capability-edges.yml
   name: Eat App Business Capability Map
