@@ -94,14 +94,14 @@ components:
               detail:
                 type: string
   responses:
-    RateLimited:
-      description: Too many requests (approximately 60 requests per minute).
+    Unauthorized:
+      description: Missing or invalid Bearer token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
+    RateLimited:
+      description: Too many requests (approximately 60 requests per minute).
       content:
         application/json:
           schema:

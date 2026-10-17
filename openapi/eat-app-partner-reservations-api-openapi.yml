@@ -45,6 +45,17 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   schemas:
+    GuestInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
     PartnerReservationInput:
       type: object
       required:
@@ -66,11 +77,6 @@ components:
           type: string
         guest:
           $ref: '#/components/schemas/GuestInput'
-    ReservationResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
     Error:
       type: object
       properties:
@@ -85,17 +91,11 @@ components:
                 type: string
               detail:
                 type: string
-    GuestInput:
+    ReservationResponse:
       type: object
       properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        phone:
-          type: string
-        email:
-          type: string
+        data:
+          $ref: '#/components/schemas/ResourceObject'
     ResourceObject:
       type: object
       properties:
@@ -113,14 +113,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
+    ValidationError:
+      description: The request body failed validation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    ValidationError:
-      description: The request body failed validation.
+    Unauthorized:
+      description: Missing or invalid Bearer token.
       content:
         application/json:
           schema:

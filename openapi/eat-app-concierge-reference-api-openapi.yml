@@ -68,22 +68,16 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid Bearer token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    GroupIdHeader:
-      name: X-Group-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific group.
   schemas:
+    GenericResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+          - $ref: '#/components/schemas/ResourceObject'
+          - type: array
+            items:
+              $ref: '#/components/schemas/ResourceObject'
     Error:
       type: object
       properties:
@@ -98,15 +92,6 @@ components:
                 type: string
               detail:
                 type: string
-    GenericResponse:
-      type: object
-      properties:
-        data:
-          oneOf:
-          - $ref: '#/components/schemas/ResourceObject'
-          - type: array
-            items:
-              $ref: '#/components/schemas/ResourceObject'
     ResourceObject:
       type: object
       properties:
@@ -117,6 +102,21 @@ components:
         attributes:
           type: object
           additionalProperties: true
+  parameters:
+    GroupIdHeader:
+      name: X-Group-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific group.
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

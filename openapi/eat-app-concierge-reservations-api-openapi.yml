@@ -120,42 +120,18 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
-  parameters:
-    IdOrKey:
-      name: id_or_key
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The reservation id or reservation key.
-    RestaurantIdHeader:
-      name: X-Restaurant-ID
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Scopes the request to a specific restaurant.
   schemas:
-    ConciergeReservationInput:
+    GuestInput:
       type: object
       properties:
-        idempotency_token:
+        first_name:
           type: string
-          description: Required on create to make the request safely retryable.
-        date:
+        last_name:
           type: string
-          format: date
-        time:
+        phone:
           type: string
-        guests:
-          type: integer
-        status:
+        email:
           type: string
-          description: Set to a cancelled status to cancel the reservation.
-        preference_id:
-          type: string
-        guest:
-          $ref: '#/components/schemas/GuestInput'
     ReservationResponse:
       type: object
       properties:
@@ -182,17 +158,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceObject'
-    GuestInput:
+    ConciergeReservationInput:
       type: object
       properties:
-        first_name:
+        idempotency_token:
           type: string
-        last_name:
+          description: Required on create to make the request safely retryable.
+        date:
           type: string
-        phone:
+          format: date
+        time:
           type: string
-        email:
+        guests:
+          type: integer
+        status:
           type: string
+          description: Set to a cancelled status to cancel the reservation.
+        preference_id:
+          type: string
+        guest:
+          $ref: '#/components/schemas/GuestInput'
     ResourceObject:
       type: object
       properties:
@@ -203,6 +188,21 @@ components:
         attributes:
           type: object
           additionalProperties: true
+  parameters:
+    RestaurantIdHeader:
+      name: X-Restaurant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Scopes the request to a specific restaurant.
+    IdOrKey:
+      name: id_or_key
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The reservation id or reservation key.
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -210,14 +210,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid Bearer token.
+    ValidationError:
+      description: The request body failed validation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    ValidationError:
-      description: The request body failed validation.
+    Unauthorized:
+      description: Missing or invalid Bearer token.
       content:
         application/json:
           schema:
