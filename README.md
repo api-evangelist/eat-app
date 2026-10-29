@@ -1,4 +1,4 @@
-# Eat App (eat-app)
+# Eat App
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,83 +64,130 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Eat App is a restaurant reservation and table management platform used by restaurants and restaurant groups to take bookings, manage floor plans and tables, build guest CRM profiles, and run front-of-house operations. Its developer surface is a **partner/key-gated** REST platform: a **Partner API** for booking channels to read availability and post reservations, and a **Concierge API** for restaurants, vendors, and groups to sync reservations, guests, availability, and reference data. Both use JSON:API-style responses, Bearer-token authentication, and a sandbox host (`api.eat-sandbox.co`) that mirrors production (`api.eatapp.co`). Eat App also exposes a **Restaurant MCP** server for connecting AI assistants.
+Eat App is a restaurant reservation and table management platform used by restaurants and restaurant groups to take bookings, manage floor plans and tables, build guest CRM profiles, and run front-of-house operations. Its developer surface is a partner/key-gated REST platform - a Partner API for booking channels to read availability and post reservations, and a Concierge API for restaurants, vendors, and groups to sync reservations, guests, availability, restaurants, and groups. Both use JSON:API-style responses, Bearer-token authentication, and an api.eat-sandbox.co sandbox mirroring api.eatapp.co production. Eat App also exposes a Restaurant MCP server for connecting AI assistants. API access is granted on request rather than fully self-serve.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/eat-app/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/eat-app/refs/heads/main/apis.yml)
+**Areas:** Restaurant · Reservations · Table Management · Hospitality · Booking · Guest CRM · Availability
 
-## Access Model (Honest Note)
+## Eat App on APIs.io
 
-Eat App's API is **documented but not fully self-serve**. The Partner and Concierge APIs are publicly documented (Eat App Help Center plus a published Postman documenter), but an **API key is issued by Eat App as part of custom-integration / partner onboarding** - the integrations FAQ says to "reach out to learn how you can gain access to your reservations and guests through our open API." There is no public developer signup that mints a key without contact. Endpoints for **Reservations, Guests, Availability**, and reference data (**Resources / Groups / Restaurants**) are confirmed from the public docs. **Tables and floor plans** are core to the product but have **no documented public endpoints**; those operations are honestly modeled here and flagged as `endpointsModeled` - confirm them against a live partner key before use.
+Everything profiled for Eat App is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/eat-app/](https://apis.io/providers/eat-app/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (7)
 
-- Restaurant
-- Reservations
-- Table Management
-- Hospitality
-- Bookings
-- Guest CRM
-- Availability
+- [Eat App Concierge - Availability API](https://apis.io/apis/eat-app/eat-app-concierge-availability-api/) — Concierge bookable time-slot lookups over a date range.
+- [Eat App Concierge - Guests API](https://apis.io/apis/eat-app/eat-app-concierge-guests-api/) — Concierge guest search and profile retrieval.
+- [Eat App Concierge - Reference API](https://apis.io/apis/eat-app/eat-app-concierge-reference-api/) — Concierge bootstrap data - resources, groups, restaurants.
+- [Eat App Concierge - Reservations API](https://apis.io/apis/eat-app/eat-app-concierge-reservations-api/) — Concierge reservation create, list, get, and update/cancel.
+- [Eat App Partner - Availability API](https://apis.io/apis/eat-app/eat-app-partner-availability-api/) — Partner API real-time availability lookups.
+- [Eat App Partner - Reservations API](https://apis.io/apis/eat-app/eat-app-partner-reservations-api/) — Partner API reservation creation.
+- [Eat App Tables and Floor Plans (Modeled) API](https://apis.io/apis/eat-app/eat-app-tables-and-floor-plans-modeled-api/) — Honestly-modeled table and floor-plan operations. Not documented in the public Partner or Concierge references; confirm before use.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-07-05
-- **Modified:** 2026-07-05
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Agentic access (1)
 
-### Eat App Partner API
+Which operations an agent can call, which act, and which need a human in the loop.
 
-Partner-facing API for booking platforms and reservation channels to query real-time availability and post reservations. JSON:API responses, Bearer auth, ~60 requests/minute. Endpoints confirmed from public docs.
+- [Eat App Agentic Access](https://apis.io/agentic-access/eat-app/eat-app-agentic-access/)
 
-- **Base URL:** `https://api.eatapp.co/partners/v2` (sandbox `https://api.eat-sandbox.co/partners/v2`)
-- `GET /availability`
-- `POST /reservations`
+#### Collections (7)
 
-### Eat App Concierge Reservations API
+Postman and Open Collection request collections.
 
-Create, list, retrieve, and modify/cancel reservations across a restaurant group. Create requires `X-Restaurant-ID` and an `idempotency_token`. Endpoints confirmed from public docs.
+- [Eat App Platform Concierge - Availability API](https://apis.io/collections/eat-app/open-eat-app-concierge-availability-api/)
+- [Eat App Platform Concierge - Availability Concierge - Guests API](https://apis.io/collections/eat-app/open-eat-app-concierge-guests-api/)
+- [Eat App Platform Concierge - Availability Concierge - Reference API](https://apis.io/collections/eat-app/open-eat-app-concierge-reference-api/)
+- [Eat App Platform Concierge - Availability Concierge - Reservations API](https://apis.io/collections/eat-app/open-eat-app-concierge-reservations-api/)
+- [Eat App Platform Concierge - Availability Partner - Availability API](https://apis.io/collections/eat-app/open-eat-app-partner-availability-api/)
+- [Eat App Platform Concierge - Availability Partner - Reservations API](https://apis.io/collections/eat-app/open-eat-app-partner-reservations-api/)
+- [Eat App Platform Concierge - Availability Tables and Floor Plans (Modeled) API](https://apis.io/collections/eat-app/open-eat-app-tables-and-floor-plans-modeled-api/)
 
-- **Base URL:** `https://api.eatapp.co/concierge/v2`
-- `GET /reservations`, `POST /reservations`, `GET /reservations/{id_or_key}`, `PATCH /reservations/{id_or_key}`
+#### Security (2)
 
-### Eat App Concierge Guests API
+Authentication, trust centre, and vulnerability disclosure.
 
-Search the guest CRM and retrieve individual guest profiles. Endpoints confirmed from public docs.
+- [Eat App Authentication](https://apis.io/security/eat-app/eat-app-authentication/)
+- [Eat App Domain Security](https://apis.io/security/eat-app/eat-app-domain-security/)
 
-- `GET /guests`, `GET /guests/{guest_id}`
+#### Plans and pricing (1)
 
-### Eat App Concierge Availability API
+Published plans, tiers and prices.
 
-Query bookable time slots for a restaurant across a date range. Endpoint confirmed from public docs.
+- [Eat App Plans Pricing](https://apis.io/plans/eat-app/eat-app-plans-pricing/)
 
-- `POST /availability/range`
+#### Rate limits (1)
 
-### Eat App Concierge Restaurants and Groups API
+Published request limits.
 
-Bootstrap and reference surface - reference data, accessible groups, and restaurants within a group (via `X-Group-ID`). Endpoints confirmed from public docs.
+- [Eat App Rate Limits](https://apis.io/rate-limits/eat-app/eat-app-rate-limits/)
 
-- `GET /resources`, `GET /groups`, `GET /restaurants`
+#### FinOps (1)
 
-### Eat App Tables and Floorplan API (Modeled)
+What the API costs to run, by operation.
 
-Table and floor-plan management is core to the platform but has **no documented public endpoints**. The operations below are honestly modeled on Eat App's documented conventions and marked `endpointsModeled` - confirm before use.
+- [Eat App Finops](https://apis.io/finops/eat-app/eat-app-finops/)
 
-- `GET /tables`, `GET /tables/{table_id}`, `GET /floor_plans` (MODELED)
+## Where to find this API
 
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- [GitHub Organization](https://github.com/eatapp)
-- [LinkedIn](https://www.linkedin.com/company/eat-app)
 - [Website](https://eatapp.co)
 - [Documentation](https://restaurant.eatapp.co/knowledge/documentation)
-- [Sign Up / Integrations](https://eatapp.co/integrations)
-- [Plans](plans/eat-app-plans-pricing.yml)
-- [Rate Limits](rate-limits/eat-app-rate-limits.yml)
-- [Fin Ops](finops/eat-app-finops.yml)
+- [Sign up](https://eatapp.co/integrations)
 - [Blog](https://restaurant.eatapp.co/blog)
+- [GitHub](https://github.com/eatapp)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 30.1** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 50.7 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 21.1 |
+
+**Agent readiness 26.1** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 11.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/eat-app/](https://apis.io/providers/eat-app/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Eat App: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/eat-app/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
